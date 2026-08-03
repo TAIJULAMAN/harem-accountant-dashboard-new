@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #5c60f5;
+  --color-brand-light: #eef2ff;
+  --color-brand-dark: #4338ca;
+  --color-bg-main: #f4f6fa;
+  
+  --color-kpi-yellow-bg: #fffbf0;
+  --color-kpi-yellow-icon-bg: #fef3c7;
+  --color-kpi-yellow-text: #d97706;
+  
+  --color-kpi-teal-bg: #e6fcf5;
+  --color-kpi-teal-icon-bg: #c3fae8;
+  --color-kpi-teal-text: #0ca678;
+
+  --color-kpi-purple-bg: #f3f0ff;
+  --color-kpi-purple-icon-bg: #e5dbff;
+  --color-kpi-purple-text: #7048e8;
+
+  --color-kpi-pink-bg: #fff0f6;
+  --color-kpi-pink-icon-bg: #ffdeeb;
+  --color-kpi-pink-text: #e64980;
+
+  --color-status-high-bg: #ffe3e3;
+  --color-status-high-text: #e03131;
+  --color-status-medium-bg: #fff3bf;
+  --color-status-medium-text: #f08c00;
+  --color-status-low-bg: #ebfbee;
+  --color-status-low-text: #2f9e44;
+}
+
+:root {
+  --background: #f4f6fa;
+  --foreground: #1e293b;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
