@@ -1,0 +1,148 @@
+export interface SalaryHistoryRecord {
+  id: string;
+  name: string;
+  empId: string;
+  avatar: string;
+  salon: string;
+  period: string;
+  gross: number;
+  net: number;
+  status: "Approved" | "Declined" | "Cancelled";
+  approvedDate?: string;
+  approvedBy?: string;
+  paymentDate?: string;
+  paymentStatus?: "pending" | "completed";
+}
+
+export const salaryHistoryData: SalaryHistoryRecord[] = [
+  {
+    id: "1",
+    name: "Maria Rodriguez",
+    empId: "EMP005",
+    avatar: "/avatar/avatar.png",
+    salon: "Glamour Beauty",
+    period: "December 2024",
+    gross: 4200,
+    net: 3200,
+    status: "Declined",
+  },
+  {
+    id: "2",
+    name: "Maria Rodriguez",
+    empId: "EMP006",
+    avatar: "/avatar/avatar1.png",
+    salon: "Style Studio",
+    period: "December 2024",
+    gross: 4200,
+    net: 3200,
+    status: "Declined",
+  },
+  {
+    id: "3",
+    name: "Maria Rodriguez",
+    empId: "EMP007",
+    avatar: "/avatar/avatar2.png",
+    salon: "Style Studio",
+    period: "December 2024",
+    gross: 4200,
+    net: 3200,
+    status: "Declined",
+  },
+  {
+    id: "4",
+    name: "Maria Rodriguez",
+    empId: "EMP008",
+    avatar: "/avatar/avatar3.png",
+    salon: "Chic Hair & Beauty",
+    period: "December 2024",
+    gross: 4200,
+    net: 3200,
+    status: "Approved",
+    approvedDate: "Dec 01, 2024",
+    approvedBy: "Lisa Owner",
+    paymentDate: "Dec 01, 2024",
+    paymentStatus: "pending",
+  },
+  {
+    id: "5",
+    name: "Maria Rodriguez",
+    empId: "EMP009",
+    avatar: "/avatar/avatar.png",
+    salon: "Chic Hair & Beauty",
+    period: "December 2024",
+    gross: 4200,
+    net: 3200,
+    status: "Approved",
+    approvedDate: "Dec 01, 2024",
+    approvedBy: "Lisa Owner",
+    paymentDate: "Dec 01, 2024",
+    paymentStatus: "completed",
+  },
+  {
+    id: "6",
+    name: "Jane Doe",
+    empId: "EMP010",
+    avatar: "/avatar/avatar1.png",
+    salon: "Glamour Beauty",
+    period: "December 2024",
+    gross: 3800,
+    net: 2900,
+    status: "Approved",
+    approvedDate: "Dec 02, 2024",
+    approvedBy: "Lisa Owner",
+    paymentDate: "Dec 02, 2024",
+    paymentStatus: "completed",
+  },
+  {
+    id: "7",
+    name: "John Smith",
+    empId: "EMP011",
+    avatar: "/avatar/avatar2.png",
+    salon: "Style Studio",
+    period: "December 2024",
+    gross: 4500,
+    net: 3400,
+    status: "Cancelled",
+  },
+  {
+    id: "8",
+    name: "Alice Johnson",
+    empId: "EMP012",
+    avatar: "/avatar/avatar3.png",
+    salon: "Chic Hair & Beauty",
+    period: "December 2024",
+    gross: 4100,
+    net: 3150,
+    status: "Approved",
+    approvedDate: "Dec 03, 2024",
+    approvedBy: "Lisa Owner",
+    paymentDate: "Dec 04, 2024",
+    paymentStatus: "pending",
+  },
+  {
+    id: "9",
+    name: "Bob Williams",
+    empId: "EMP013",
+    avatar: "/avatar/avatar.png",
+    salon: "Glamour Beauty",
+    period: "December 2024",
+    gross: 3900,
+    net: 3000,
+    status: "Declined",
+  },
+  {
+    id: "10",
+    name: "Emma Davis",
+    empId: "EMP014",
+    avatar: "/avatar/avatar1.png",
+    salon: "Style Studio",
+    period: "December 2024",
+    gross: 4800,
+    net: 3600,
+    status: "Approved",
+    approvedDate: "Dec 05, 2024",
+    approvedBy: "Lisa Owner",
+    paymentDate: "Dec 05, 2024",
+    paymentStatus: "completed",
+  },
+];
