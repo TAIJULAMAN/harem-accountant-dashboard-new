@@ -72,16 +72,16 @@ export default function KPICards({ selectedSalon }: KPICardsProps) {
               >
                 {renderIcon(stat.iconType)}
               </div>
-              <span className="text-lg font-semibold text-slate-700 tracking-tight leading-snug">
+              <h2 className="text-lg font-semibold text-slate-700 tracking-tight leading-snug">
                 {stat.title}
-              </span>
+              </h2>
             </div>
 
             {/* Content: Value + Stats info */}
             <div className="mt-8">
-              <h3 className="text-2xl font-bold tracking-tight text-slate-800 leading-none">
+              <p className="text-2xl font-bold tracking-tight text-slate-800 leading-none">
                 {stat.value}
-              </h3>
+              </p>
 
               <div className="mt-4 flex flex-col gap-0.5">
                 <span className="text-xs font-semibold text-slate-800">

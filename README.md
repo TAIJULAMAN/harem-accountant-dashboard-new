@@ -9,6 +9,8 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+<br/>
+<img src="./public/readme/dashboard.png" alt="Harem Accountant Dashboard Preview" width="100%" />
 
 </div>
 
@@ -18,6 +20,7 @@
 
 - [Overview](#-overview)
 - [Key Features](#-key-features)
+- [Performance & Accessibility](#-performance--accessibility)
 - [Architecture](#-architecture)
 - [Tech Stack](#-tech-stack)
 - [Project Structure](#-project-structure)
@@ -41,6 +44,20 @@ The **Harem Accountant Dashboard** is a powerful platform tailored for accountan
 - **Document Management**: Centralized repository for contracts, employee notices, and sensitive owner documents.
 - **Multi-Salon Management**: Manage multiple salon locations, review revenue shares, handle payouts, and invite new members to the platform.
 - **Real-time Notifications**: Keep track of pending approvals, deadlines, and critical alerts.
+
+---
+
+## Performance & Accessibility
+
+We take performance and accessibility seriously. The dashboard is highly optimized for fast loading times and adheres strictly to a11y standards. 
+
+<div align="center">
+  <img src="./public/readme/performance.png" alt="Lighthouse Performance Score" width="100%" />
+</div>
+
+- **Lighthouse Optimized**: Achieves near-perfect scores out of the box in production builds. 
+- **Accessible Design**: Carefully calculated color contrast ratios (> 4.5:1), semantic HTML elements (proper heading hierarchy), and ARIA-labelled icon buttons ensure the platform is usable by everyone.
+- **Critical CSS**: Leverages Next.js automatic CSS inlining in production to eliminate render-blocking network chains.
 
 ---
 

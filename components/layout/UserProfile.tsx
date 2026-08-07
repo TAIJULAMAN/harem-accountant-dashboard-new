@@ -41,7 +41,7 @@ export default function UserProfile() {
         </div>
         <div className="hidden md:block text-left pr-1">
           <h4 className="text-xs font-semibold text-slate-700">Jane Doe</h4>
-          <p className="text-[10px] text-slate-400">Senior Accountant</p>
+          <p className="text-[10px] text-slate-500">Senior Accountant</p>
         </div>
         <ChevronDown size={14} className="text-slate-400 hidden sm:block" />
       </button>

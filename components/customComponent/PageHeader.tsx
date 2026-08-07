@@ -17,7 +17,7 @@ export default function PageHeader({
         <h1 className="text-xl font-semibold text-slate-800 tracking-tight">
           {title}
         </h1>
-        <p className="text-xs text-slate-400 font-medium mt-0.5">
+        <p className="text-xs text-slate-500 font-medium mt-0.5">
           {description}
         </p>
       </div>

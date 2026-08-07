@@ -22,9 +22,9 @@ export default function RecentActivity({ selectedSalon }: RecentActivityProps) {
   });
 
   const priorityStyles = {
-    High: "bg-[#ff4b81] text-white",
-    Medium: "bg-[#fcc419] text-white",
-    Low: "bg-[#20c997] text-white",
+    High: "bg-[#c71f4d] text-white",
+    Medium: "bg-[#fcc419] text-slate-900",
+    Low: "bg-[#0d6e52] text-white",
   };
 
   const filters: ("All" | "High" | "Medium" | "Low")[] = [
@@ -54,7 +54,7 @@ export default function RecentActivity({ selectedSalon }: RecentActivityProps) {
                   rounded-lg px-3.5 sm:px-4 py-1.5 text-xs font-semibold transition-all duration-200 border cursor-pointer
                   ${
                     isActive
-                      ? "border-brand text-brand bg-brand/5"
+                      ? "border-brand text-[#4a4ec4] bg-brand/5"
                       : "border-slate-100 text-slate-500 hover:bg-slate-50 hover:text-slate-800"
                   }
                 `}
@@ -106,7 +106,7 @@ export default function RecentActivity({ selectedSalon }: RecentActivityProps) {
                     >
                       {activity.priority}
                     </span>
-                    <span className="text-[9px] font-semibold text-slate-400">
+                    <span className="text-[9px] font-semibold text-slate-500">
                       {activity.date}
                     </span>
                   </div>
@@ -120,7 +120,7 @@ export default function RecentActivity({ selectedSalon }: RecentActivityProps) {
                 >
                   {activity.priority}
                 </span>
-                <span className="text-[10px] font-semibold text-slate-400 mt-2">
+                <span className="text-[10px] font-semibold text-slate-500 mt-2">
                   {activity.date}
                 </span>
               </div>

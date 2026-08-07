@@ -29,7 +29,6 @@ export default function Header({
     "Chic Hair & Beauty",
   ];
 
-  // Close dropdowns on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -74,6 +73,7 @@ export default function Header({
       <div className="flex flex-1 items-center gap-2 sm:gap-4">
         <button
           onClick={onMenuClick}
+          aria-label="Open menu"
           className="flex h-10 w-10 items-center justify-center rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-700 lg:hidden"
         >
           <Menu size={22} />
@@ -95,10 +95,10 @@ export default function Header({
 
       {/* Header Actions */}
       <div className="flex items-center gap-2 sm:gap-4 md:gap-6">
-        {/* Mobile Search Icon (only visible on mobile layout) */}
         <div className="sm:hidden">
-          <button 
+          <button
             onClick={() => setMobileSearchOpen(true)}
+            aria-label="Open search"
             className="flex h-10 w-10 items-center justify-center rounded-xl text-slate-500 hover:bg-slate-50 cursor-pointer"
           >
             <Search size={20} />
@@ -111,7 +111,9 @@ export default function Header({
             onClick={() => setSalonDropdownOpen(!salonDropdownOpen)}
             className="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-200 bg-white px-2.5 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 shadow-sm transition-all hover:bg-slate-50 hover:border-slate-300 cursor-pointer"
           >
-            <span className="max-w-[90px] sm:max-w-[150px] md:max-w-none truncate">{selectedSalon}</span>
+            <span className="max-w-[90px] sm:max-w-[150px] md:max-w-none truncate">
+              {selectedSalon}
+            </span>
             <ChevronDown
               size={14}
               className={`text-slate-500 transition-transform duration-200 shrink-0 ${salonDropdownOpen ? "rotate-180" : ""}`}
@@ -142,6 +144,7 @@ export default function Header({
         </div>
         <Link
           href="/notifications"
+          aria-label="View notifications"
           className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 transition-colors shadow-sm cursor-pointer"
         >
           <Bell size={20} />
