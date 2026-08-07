@@ -13,6 +13,7 @@ export default function ReceiptDetailHeader({ onBack }: ReceiptDetailHeaderProps
       <div className="flex items-center gap-3 text-left">
         <button
           onClick={onBack}
+          aria-label="Go back to receipts"
           className="p-2 transition-colors cursor-pointer text-slate-500"
         >
           <ChevronLeft size={32} />
