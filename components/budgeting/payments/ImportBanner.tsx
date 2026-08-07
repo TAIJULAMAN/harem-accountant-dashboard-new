@@ -1,24 +1,54 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import { Play, Pause, Volume2, VolumeX, Maximize, MoreVertical } from "lucide-react";
+import React, { useState, useRef, useSyncExternalStore } from "react";
+import {
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
+  Maximize,
+  MoreVertical,
+} from "lucide-react";
 import Image from "next/image";
-import ReactPlayer from "react-player";
+import BaseReactPlayer from "react-player";
 
-const Player = ReactPlayer as any;
+interface ReactPlayerRef {
+  seekTo: (amount: number, type?: "seconds" | "fraction") => void;
+}
+
+interface ReactPlayerProps {
+  url: string;
+  width?: string;
+  height?: string;
+  playing?: boolean;
+  muted?: boolean;
+  onProgress?: (state: {
+    played: number;
+    playedSeconds: number;
+    loaded: number;
+    loadedSeconds: number;
+  }) => void;
+  onEnded?: () => void;
+  style?: React.CSSProperties;
+  config?: Record<string, unknown>;
+  ref?: React.Ref<ReactPlayerRef>;
+}
+
+const Player = BaseReactPlayer as unknown as React.ComponentType<ReactPlayerProps>;
+
+const subscribe = () => () => {};
+const getSnapshot = () => true;
+const getServerSnapshot = () => false;
 
 export default function ImportBanner() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const playerRef = useRef<any>(null);
+  const playerRef = useRef<ReactPlayerRef>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [progress, setProgress] = useState(0);
   const [hasStarted, setHasStarted] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const isMounted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
@@ -39,7 +69,12 @@ export default function ImportBanner() {
     }
   };
 
-  const handleProgress = (state: any) => {
+  const handleProgress = (state: {
+    played: number;
+    playedSeconds: number;
+    loaded: number;
+    loadedSeconds: number;
+  }) => {
     setProgress(state.played * 100);
   };
 
@@ -52,7 +87,7 @@ export default function ImportBanner() {
   };
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className="relative w-full h-[240px] md:h-[320px] rounded-2xl overflow-hidden shadow-sm mb-8 group bg-black"
     >
@@ -67,47 +102,65 @@ export default function ImportBanner() {
           muted={isMuted}
           onProgress={handleProgress}
           onEnded={() => setIsPlaying(false)}
-          style={{ pointerEvents: hasStarted ? 'auto' : 'none' }}
+          style={{ pointerEvents: hasStarted ? "auto" : "none" }}
           config={{
             youtube: {
               playerVars: {
                 controls: 0,
                 disablekb: 1,
                 modestbranding: 1,
-                rel: 0
-              }
-            }
+                rel: 0,
+              },
+            },
           }}
         />
       )}
 
-      {/* Custom Poster Overlay (disappears after first play) */}
       {!hasStarted && (
-        <div 
-          className="absolute inset-0 z-10 cursor-pointer"
+        <div
+          className="absolute inset-0 z-10 cursor-pointer flex items-center justify-center group"
           onClick={togglePlay}
         >
           <Image
-            src="/player.svg"
+            src="/thumbnail.png"
             alt="Import Payments Tutorial"
             fill
             className="object-cover"
             priority
           />
+          <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors" />
+          <div className="relative z-20 w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:scale-110 transition-all shadow-lg">
+            <Play className="w-8 h-8 text-white fill-white ml-1" />
+          </div>
         </div>
       )}
 
       {/* Video Controls Overlay */}
-      <div className={`absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-between text-white transition-opacity duration-300 z-20 ${isPlaying && hasStarted ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}>
-        <button onClick={togglePlay} className="p-2 hover:bg-white/20 rounded-full transition-colors cursor-pointer">
-          {isPlaying ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
+      <div
+        className={`absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-between text-white transition-opacity duration-300 z-20 ${isPlaying && hasStarted ? "opacity-0 group-hover:opacity-100" : "opacity-100"}`}
+      >
+        <button
+          onClick={togglePlay}
+          className="p-2 hover:bg-white/20 rounded-full transition-colors cursor-pointer"
+        >
+          {isPlaying ? (
+            <Pause size={18} fill="currentColor" />
+          ) : (
+            <Play size={18} fill="currentColor" />
+          )}
         </button>
 
         <div className="flex items-center gap-2">
-          <button onClick={toggleMute} className="p-2 hover:bg-white/20 rounded-full transition-colors cursor-pointer">
+          <button
+            onClick={toggleMute}
+            className="p-2 hover:bg-white/20 rounded-full transition-colors cursor-pointer"
+          >
             {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
           </button>
-          <button onClick={toggleFullscreen} className="p-2 hover:bg-white/20 rounded-full transition-colors cursor-pointer">
+          <button
+            onClick={toggleFullscreen}
+            className="p-2 hover:bg-white/20 rounded-full transition-colors cursor-pointer"
+          >
             <Maximize size={18} />
           </button>
           <button className="p-2 hover:bg-white/20 rounded-full transition-colors cursor-pointer">

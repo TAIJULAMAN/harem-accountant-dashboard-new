@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { MoreVertical, Eye, RotateCcw, Printer } from "lucide-react";
 import { mockPayments } from "./data";
 import Pagination from "@/components/customComponent/Pagination";
+import RefundModal from "./RefundModal";
 
 interface PaymentsTableProps {
   activeMethod: string;
@@ -18,13 +19,26 @@ export default function PaymentsTable({
   activeReceipt,
 }: PaymentsTableProps) {
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+  const [refundModalPaymentId, setRefundModalPaymentId] = useState<
+    string | null
+  >(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [prevFilters, setPrevFilters] = useState({
+    activeMethod,
+    activeStatus,
+    activeReceipt,
+  });
   const numItemsPerPage = 5;
 
   // Reset to first page when filters change
-  useEffect(() => {
+  if (
+    activeMethod !== prevFilters.activeMethod ||
+    activeStatus !== prevFilters.activeStatus ||
+    activeReceipt !== prevFilters.activeReceipt
+  ) {
+    setPrevFilters({ activeMethod, activeStatus, activeReceipt });
     setCurrentPage(1);
-  }, [activeMethod, activeStatus, activeReceipt]);
+  }
 
   // Filter Data
   const filteredPayments = mockPayments.filter((payment) => {
@@ -44,12 +58,15 @@ export default function PaymentsTable({
     startIndex,
     startIndex + numItemsPerPage,
   );
-  const endItem = Math.min(startIndex + numItemsPerPage, totalItems);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     setOpenDropdownId(null);
   };
+
+  const selectedPaymentForRefund = mockPayments.find(
+    (p) => p.id === refundModalPaymentId,
+  );
 
   const getMethodBadge = (method: string) => {
     switch (method) {
@@ -140,7 +157,7 @@ export default function PaymentsTable({
                   {payment.paymentDate}
                 </td>
                 <td className="px-6 py-4">
-                  <div className="text-xs font-bold text-slate-800">
+                  <div className="text-sm font-semibold text-slate-800">
                     {payment.client.name}
                   </div>
                   <div className="text-[10px] font-semibold text-slate-400">
@@ -160,21 +177,21 @@ export default function PaymentsTable({
                 </td>
                 <td className="px-6 py-4">
                   <span
-                    className={`px-2.5 py-1 rounded-md text-[10px] font-extrabold ${getMethodBadge(payment.method)}`}
+                    className={`px-2.5 py-1 rounded-md text-xs font-semibold ${getMethodBadge(payment.method)}`}
                   >
                     {payment.method}
                   </span>
                 </td>
                 <td className="px-6 py-4">
                   <span
-                    className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold ${getStatusBadge(payment.status)}`}
+                    className={`px-2.5 py-1 rounded-full text-xs font-semibold ${getStatusBadge(payment.status)}`}
                   >
                     {payment.status}
                   </span>
                 </td>
                 <td className="px-6 py-4">
                   <span
-                    className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold ${getReceiptBadge(payment.receiptIssue)}`}
+                    className={`px-3 py-1 rounded-full text-xs font-semibold ${getReceiptBadge(payment.receiptIssue)}`}
                   >
                     {payment.receiptIssue}
                   </span>
@@ -205,12 +222,21 @@ export default function PaymentsTable({
                         >
                           <Eye size={14} /> View Details
                         </Link>
-                        <button className="w-full px-4 py-2 text-xs font-semibold text-slate-600 hover:text-yellow-500 hover:bg-yellow-50 flex items-center gap-2 transition-colors">
+                        <button
+                          onClick={() => {
+                            setRefundModalPaymentId(payment.id);
+                            setOpenDropdownId(null);
+                          }}
+                          className="w-full px-4 py-2 text-xs font-semibold text-slate-600 hover:text-yellow-500 hover:bg-yellow-50 flex items-center gap-2 transition-colors"
+                        >
                           <RotateCcw size={14} /> Refund
                         </button>
-                        <button className="w-full px-4 py-2 text-xs font-semibold text-slate-600 hover:text-emerald-500 hover:bg-emerald-50 flex items-center gap-2 transition-colors">
+                        <Link 
+                          href="/budgeting/receipts/view"
+                          className="w-full px-4 py-2 text-xs font-semibold text-slate-600 hover:text-emerald-500 hover:bg-emerald-50 flex items-center gap-2 transition-colors"
+                        >
                           <Printer size={14} /> Print Receipt
-                        </button>
+                        </Link>
                       </div>
                     </>
                   )}
@@ -227,6 +253,14 @@ export default function PaymentsTable({
         itemsPerPage={numItemsPerPage}
         itemsName="payments"
         onPageChange={handlePageChange}
+      />
+      <RefundModal
+        isOpen={!!refundModalPaymentId}
+        onClose={() => setRefundModalPaymentId(null)}
+        paymentId={selectedPaymentForRefund?.id || ""}
+        paymentDate={selectedPaymentForRefund?.paymentDate || ""}
+        paymentMethod={selectedPaymentForRefund?.method || "Cash"}
+        maxAmount={170}
       />
     </div>
   );

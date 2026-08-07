@@ -3,20 +3,20 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, Home } from "lucide-react";
+import { ChevronLeft, Home, FileText, X } from "lucide-react";
 import ImportBanner from "./ImportBanner";
-import ImportTemplatesAndFile from "./ImportTemplatesAndFile";
+import CustomFileUpload from "@/components/customComponent/CustomFileUpload";
 import ImportedListTable from "./ImportedListTable";
-import { mockImportedPayments } from "./data";
+import { mockImportedPayments, ImportedPaymentItem } from "./data";
+import ImportTemplatesAndFile from "./ImportTemplatesAndFile";
 
 export default function ImportPayments() {
   const router = useRouter();
-  const [importedData, setImportedData] = useState<any[]>([]);
+  const [importedData, setImportedData] = useState<ImportedPaymentItem[]>([]);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
   const handleFileUpload = (file: File) => {
     setUploadedFile(file);
-    // Simulate parsing the file by scrambling the mock data a bit
     const newItems = mockImportedPayments.map((item, index) => ({
       ...item,
       id: `#NEW-${index + 1}`,
@@ -37,15 +37,12 @@ export default function ImportPayments() {
 
   return (
     <div className="space-y-6 pb-20">
-      {/* Top Header */}
       <div className="bg-white rounded-xl p-4 shadow-sm flex items-center justify-between">
         <Link
           href="/budgeting/payments"
           className="flex items-center gap-2 text-xl font-semibold text-slate-800 hover:text-[#5c60f5] transition-colors"
         >
-
           <ChevronLeft size={24} />
-
           Import Services
         </Link>
         <div className="flex items-center gap-1 bg-[#f3effe] px-3 py-1.5 rounded-lg text-xs font-semibold text-[#5c60f5]">
@@ -57,21 +54,44 @@ export default function ImportPayments() {
 
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
         <ImportBanner />
-        <ImportTemplatesAndFile
-          uploadedFile={uploadedFile}
-          onUpload={handleFileUpload}
-          onRemoveFile={handleRemoveFile}
-        />
+        <ImportTemplatesAndFile />
+        {uploadedFile ? (
+          <div className="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-xl p-4 mt-6">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-[#5c60f5]/10 rounded-lg flex items-center justify-center text-[#5c60f5]">
+                <FileText size={20} />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-slate-800">
+                  {uploadedFile.name}
+                </p>
+                <p className="text-xs text-slate-500">
+                  {(uploadedFile.size / 1024).toFixed(2)} KB
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={handleRemoveFile}
+              className="p-2 text-slate-400 hover:text-red-500 transition-colors"
+            >
+              <X size={20} />
+            </button>
+          </div>
+        ) : (
+          <div className="mt-5">
+            <CustomFileUpload
+              label="Upload Data File"
+              accept=".csv,.xlsx"
+              onFileSelect={handleFileUpload}
+            />
+          </div>
+        )}
       </div>
 
       {importedData.length > 0 && (
-        <ImportedListTable
-          data={importedData}
-          onDataChange={setImportedData}
-        />
+        <ImportedListTable data={importedData} onDataChange={setImportedData} />
       )}
 
-      {/* Floating Save Button */}
       {importedData.length > 0 && (
         <div className="fixed bottom-8 right-8 z-50">
           <button

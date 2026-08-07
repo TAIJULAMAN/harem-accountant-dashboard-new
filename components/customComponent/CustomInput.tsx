@@ -11,6 +11,8 @@ interface CustomInputProps {
   type?: string;
   required?: boolean;
   icon?: ReactNode;
+  readOnly?: boolean;
+  error?: boolean;
 }
 
 export default function CustomInput({
@@ -22,6 +24,8 @@ export default function CustomInput({
   type = "text",
   required,
   icon,
+  readOnly,
+  error,
 }: CustomInputProps) {
   return (
     <div className="flex flex-col gap-2">
@@ -41,7 +45,14 @@ export default function CustomInput({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           required={required}
-          className={`w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 placeholder:text-slate-400 outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-colors ${
+          readOnly={readOnly}
+          className={`w-full rounded-lg border px-4 py-3 text-sm outline-none transition-colors ${
+            error
+              ? "border-[#ff4d79] bg-white text-slate-700 focus:border-[#ff4d79] focus:ring-1 focus:ring-[#ff4d79]"
+              : readOnly
+              ? "border-slate-100 bg-slate-50/70 text-slate-400 cursor-default shadow-sm"
+              : "border-slate-200 bg-white text-slate-700 placeholder:text-slate-400 focus:border-[#5c60f5] focus:ring-1 focus:ring-[#5c60f5] shadow-sm"
+          } ${
             type === "date"
               ? "[&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
               : ""

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { ChevronLeft, Home, Mail, MessageSquare, Phone } from "lucide-react";
+import CustomSwitch from "@/components/customComponent/CustomSwitch";
 
 export default function AutomationsPage() {
   const [activeTab, setActiveTab] = useState("Cash Payment");
@@ -59,84 +60,66 @@ export default function AutomationsPage() {
         {/* Automation Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Card 1: WhatsApp */}
-          <div className="bg-[#f8fafc] rounded-2xl p-6 flex flex-col justify-between min-h-[220px]">
-            <div className="flex items-start justify-between mb-4">
-              <div className="h-10 w-10 rounded-full bg-[#25D366] flex items-center justify-center text-white shadow-sm">
-                <Phone size={20} className="fill-current" />
-              </div>
-              <button 
-                onClick={() => handleToggle('whatsapp')}
-                className={`w-11 h-[22px] rounded-[8px] flex items-center p-1 transition-colors cursor-pointer ${
-                  toggles.whatsapp ? "bg-[#5c60f5]" : "bg-slate-200"
-                }`}
-              >
-                <div 
-                  className={`w-[16px] h-[16px] rounded-[6px] bg-white shadow-sm transition-transform ${
-                    toggles.whatsapp ? "translate-x-[20px]" : "translate-x-0"
-                  }`} 
-                />
+          <div className="bg-[#f8fafc] rounded-[18px] p-6 flex flex-col min-h-[200px] border border-transparent hover:border-slate-100 transition-colors">
+            <div className="h-[38px] w-[38px] rounded-full bg-[#25D366] flex items-center justify-center text-white shadow-sm mb-5">
+              <Phone size={18} className="fill-current" />
+            </div>
+            <div className="flex items-center justify-between gap-4 mb-6">
+              <h4 className="text-[13.5px] font-medium text-slate-800 leading-[1.3] max-w-[170px]">
+                Send whatsapp message with receipt
+              </h4>
+              <CustomSwitch
+                checked={toggles.whatsapp}
+                onChange={() => handleToggle("whatsapp")}
+              />
+            </div>
+            <div className="mt-auto">
+              <button className="px-3.5 py-2 bg-[#f3effe] text-[#5c60f5] text-[11.5px] font-medium rounded-lg hover:bg-[#e0e1fe] transition-colors shadow-sm">
+                Personalize Whatsapp Message
               </button>
             </div>
-            <h4 className="text-[15px] font-semibold text-slate-800 leading-snug mb-6 pr-4">
-              Send whatsapp message with receipt
-            </h4>
-            <button className="self-start px-4 py-2 bg-[#f3effe] text-[#5c60f5] text-xs font-bold rounded-lg hover:bg-[#e0e1fe] transition-colors">
-              Personalize Whatsapp Message
-            </button>
           </div>
 
           {/* Card 2: Email */}
-          <div className="bg-[#f8fafc] rounded-2xl p-6 flex flex-col justify-between min-h-[220px]">
-            <div className="flex items-start justify-between mb-4">
-              <div className="h-10 w-10 rounded-full bg-[#5c60f5] flex items-center justify-center text-white shadow-sm">
-                <Mail size={20} />
-              </div>
-              <button 
-                onClick={() => handleToggle('email')}
-                className={`w-11 h-[22px] rounded-[8px] flex items-center p-1 transition-colors cursor-pointer ${
-                  toggles.email ? "bg-[#5c60f5]" : "bg-slate-200"
-                }`}
-              >
-                <div 
-                  className={`w-[16px] h-[16px] rounded-[6px] bg-white shadow-sm transition-transform ${
-                    toggles.email ? "translate-x-[20px]" : "translate-x-0"
-                  }`} 
-                />
+          <div className="bg-[#f8fafc] rounded-[18px] p-6 flex flex-col min-h-[200px] border border-transparent hover:border-slate-100 transition-colors">
+            <div className="h-[38px] w-[38px] rounded-full bg-[#5c60f5] flex items-center justify-center text-white shadow-sm mb-5">
+              <Mail size={18} />
+            </div>
+            <div className="flex items-center justify-between gap-4 mb-6">
+              <h4 className="text-[13.5px] font-medium text-slate-800 leading-[1.3] max-w-[170px]">
+                Send email with receipt
+              </h4>
+              <CustomSwitch
+                checked={toggles.email}
+                onChange={() => handleToggle("email")}
+              />
+            </div>
+            <div className="mt-auto">
+              <button className="px-3.5 py-2 bg-[#f3effe] text-[#5c60f5] text-[11.5px] font-medium rounded-lg hover:bg-[#e0e1fe] transition-colors shadow-sm">
+                Personalize Email
               </button>
             </div>
-            <h4 className="text-[15px] font-semibold text-slate-800 leading-snug mb-6 pr-4">
-              Send email with receipt
-            </h4>
-            <button className="self-start px-4 py-2 bg-[#f3effe] text-[#5c60f5] text-xs font-bold rounded-lg hover:bg-[#e0e1fe] transition-colors">
-              Personalize Email
-            </button>
           </div>
 
           {/* Card 3: Phone Message */}
-          <div className="bg-[#f8fafc] rounded-2xl p-6 flex flex-col justify-between min-h-[220px]">
-            <div className="flex items-start justify-between mb-4">
-              <div className="h-10 w-10 rounded-full bg-[#FFB74D] flex items-center justify-center text-white shadow-sm">
-                <MessageSquare size={20} className="fill-current" />
-              </div>
-              <button 
-                onClick={() => handleToggle('phone')}
-                className={`w-11 h-[22px] rounded-[8px] flex items-center p-1 transition-colors cursor-pointer ${
-                  toggles.phone ? "bg-[#5c60f5]" : "bg-slate-200"
-                }`}
-              >
-                <div 
-                  className={`w-[16px] h-[16px] rounded-[6px] bg-white shadow-sm transition-transform ${
-                    toggles.phone ? "translate-x-[20px]" : "translate-x-0"
-                  }`} 
-                />
+          <div className="bg-[#f8fafc] rounded-[18px] p-6 flex flex-col min-h-[200px] border border-transparent hover:border-slate-100 transition-colors">
+            <div className="h-[38px] w-[38px] rounded-full bg-[#FFCA28] flex items-center justify-center text-white shadow-sm mb-5">
+              <MessageSquare size={18} className="fill-current" />
+            </div>
+            <div className="flex items-center justify-between gap-4 mb-6">
+              <h4 className="text-[13.5px] font-medium text-slate-800 leading-[1.3] max-w-[170px]">
+                Send phone message with receipt
+              </h4>
+              <CustomSwitch
+                checked={toggles.phone}
+                onChange={() => handleToggle("phone")}
+              />
+            </div>
+            <div className="mt-auto">
+              <button className="px-3.5 py-2 bg-[#f3effe] text-[#5c60f5] text-[11.5px] font-medium rounded-lg hover:bg-[#e0e1fe] transition-colors shadow-sm">
+                Personalize Phone Message
               </button>
             </div>
-            <h4 className="text-[15px] font-semibold text-slate-800 leading-snug mb-6 pr-4">
-              Send phone message with receipt
-            </h4>
-            <button className="self-start px-4 py-2 bg-[#f3effe] text-[#5c60f5] text-xs font-bold rounded-lg hover:bg-[#e0e1fe] transition-colors">
-              Personalize Phone Message
-            </button>
           </div>
         </div>
       </div>

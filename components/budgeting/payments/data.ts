@@ -1,3 +1,5 @@
+import { Activity, FileText, AlertCircle } from "lucide-react";
+
 export interface PaymentItem {
   id: string;
   paymentDate: string;
@@ -26,6 +28,33 @@ export const paymentsMetrics = {
   notPaidNoReceipt: 565,
   paymentsCount: 5
 };
+
+export const metricCards = [
+  {
+    title: "Total Sales",
+    value: `€ ${paymentsMetrics.totalSales}`,
+    subtitle: `${paymentsMetrics.paymentsCount} payments total`,
+    icon: Activity,
+    bgColor: "bg-gradient-to-b from-[#5c60f5]/[0.13] to-[#5c60f5]/[0.03]",
+    iconBgColor: "bg-[#5c60f5]",
+  },
+  {
+    title: "Paid with Receipt Sales",
+    value: `€ ${paymentsMetrics.paidWithReceipt}`,
+    subtitle: "Payments with completed receipt",
+    icon: FileText,
+    bgColor: "bg-gradient-to-b from-[#10b981]/[0.13] to-[#10b981]/[0.03]",
+    iconBgColor: "bg-[#10b981]",
+  },
+  {
+    title: "Not Paid / No Receipt",
+    value: `€ ${paymentsMetrics.notPaidNoReceipt}`,
+    subtitle: "Sales on credit or without receipt",
+    icon: AlertCircle,
+    bgColor: "bg-gradient-to-b from-[#facc15]/[0.13] to-[#facc15]/[0.03]",
+    iconBgColor: "bg-[#facc15]",
+  },
+];
 
 export const filterOptions = {
   methods: ["All", "Cash", "Card Terminal", "Gift Card", "Online Payment"],

@@ -1,34 +1,7 @@
 import React from "react";
-import { Activity, FileText, AlertCircle } from "lucide-react";
-import { paymentsMetrics } from "./data";
+import { metricCards as cards } from "./data";
 
 export default function PaymentsMetricCards() {
-  const cards = [
-    {
-      title: "Total Sales",
-      value: `€ ${paymentsMetrics.totalSales}`,
-      subtitle: `${paymentsMetrics.paymentsCount} payments total`,
-      icon: Activity,
-      bgColor: "bg-gradient-to-b from-[#5c60f5]/[0.13] to-[#5c60f5]/[0.03]",
-      iconBgColor: "bg-[#5c60f5]",
-    },
-    {
-      title: "Paid with Receipt Sales",
-      value: `€ ${paymentsMetrics.paidWithReceipt}`,
-      subtitle: "Payments with completed receipt",
-      icon: FileText,
-      bgColor: "bg-gradient-to-b from-[#10b981]/[0.13] to-[#10b981]/[0.03]",
-      iconBgColor: "bg-[#10b981]",
-    },
-    {
-      title: "Not Paid / No Receipt",
-      value: `€ ${paymentsMetrics.notPaidNoReceipt}`,
-      subtitle: "Sales on credit or without receipt",
-      icon: AlertCircle,
-      bgColor: "bg-gradient-to-b from-[#facc15]/[0.13] to-[#facc15]/[0.03]",
-      iconBgColor: "bg-[#facc15]",
-    },
-  ];
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
