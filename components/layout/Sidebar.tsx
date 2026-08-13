@@ -244,7 +244,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       {/* Sidebar Container */}
       <aside
         className={`
-        fixed inset-y-0 left-0 z-50 flex w-72 h-screen flex-col border-r border-slate-100 bg-white px-6 py-6 transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 lg:h-screen
+        fixed inset-y-0 left-0 z-50 flex w-72 h-screen flex-col bg-white px-6 py-6 transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 lg:h-screen
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
       `}
       >
