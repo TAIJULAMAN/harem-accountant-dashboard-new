@@ -43,7 +43,7 @@ export default function Header({
   }, []);
 
   return (
-    <header className="flex h-20 w-full items-center justify-between border-b border-slate-100 bg-white px-4 sm:px-6 lg:px-8 relative">
+    <header className="flex h-20 w-full items-center justify-between bg-white px-4 sm:px-6 lg:px-8 relative">
       {/* Mobile Search Overlay */}
       {mobileSearchOpen && (
         <div className="absolute inset-x-0 inset-y-0 bg-white z-40 flex items-center px-4 gap-3 animate-in slide-in-from-top duration-150">
