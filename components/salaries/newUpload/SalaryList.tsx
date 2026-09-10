@@ -9,6 +9,7 @@ interface SalaryListProps {
   toggleSelect: (id: string) => void;
   setEditingPacket: (packet: ExtractedSalary | null) => void;
   approvePacket: (id: string) => void;
+  onEditCausale?: (packet: ExtractedSalary) => void;
 }
 
 export default function SalaryList({
@@ -17,6 +18,7 @@ export default function SalaryList({
   toggleSelect,
   setEditingPacket,
   approvePacket,
+  onEditCausale,
 }: SalaryListProps) {
   return (
     <div className="flex flex-col gap-4">

@@ -1,5 +1,5 @@
 import React from "react";
-import CustomInput from "../../customComponent/CustomInput";
+import { Calendar } from "lucide-react";
 import { ExtractedSalary } from "@/components/salaries/newUpload/data";
 
 interface PayPeriodCardProps {
@@ -12,29 +12,33 @@ export default function PayPeriodCard({
   setEditingPacket,
 }: PayPeriodCardProps) {
   return (
-    <div className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm space-y-4">
-      <div className="flex justify-between items-center border-b border-slate-50 pb-2">
-        <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-          Pay Period
-        </h4>
+    <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs space-y-4">
+      {/* Section Header with Icon */}
+      <div className="flex items-center gap-2 text-slate-800 font-bold text-sm border-b border-slate-100 pb-3">
+        <Calendar size={16} className="text-slate-500 shrink-0" />
+        <span>Pay Period</span>
       </div>
 
-      <div className="space-y-1">
-        <div className="flex justify-between items-center mb-1">
-          <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+      <div>
+        <div className="flex items-center justify-between mb-1.5">
+          <label className="text-xs font-semibold text-slate-500">
             Period (MM/YYYY)
           </label>
-          <span className="text-[11px] font-bold text-emerald-500">80%</span>
+          <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60">
+            83%
+          </span>
         </div>
-        <CustomInput
-          required
-          value={editingPacket.period}
-          onChange={(val) =>
+        <input
+          type="text"
+          value={editingPacket.period || ""}
+          onChange={(e) =>
             setEditingPacket({
               ...editingPacket,
-              period: val,
+              period: e.target.value,
             })
           }
+          placeholder="MM/YYYY"
+          className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand focus:bg-white transition-all"
         />
       </div>
     </div>

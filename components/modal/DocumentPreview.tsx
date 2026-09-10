@@ -1,135 +1,188 @@
-import React from "react";
-import Image from "next/image";
+"use client";
+
+import React, { useEffect, useRef, useState } from "react";
+import { Loader2, Upload, AlertCircle, FileText } from "lucide-react";
 import { ExtractedSalary } from "../salaries/newUpload/data";
 
 interface DocumentPreviewProps {
   zoom: number;
   docPage: number;
-  editingPacket: ExtractedSalary;
+  editingPacket?: ExtractedSalary;
+  pdfUrl?: string | null;
+  onPageCountChange?: (totalPages: number) => void;
+  onUploadNewPdf?: (file: File) => void;
 }
 
 export default function DocumentPreview({
   zoom,
   docPage,
   editingPacket,
+  pdfUrl,
+  onPageCountChange,
+  onUploadNewPdf,
 }: DocumentPreviewProps) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [pdfDoc, setPdfDoc] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [useNativeViewer, setUseNativeViewer] = useState(false);
+
+  // Active PDF source: either user uploaded PDF URL or the generated sample PDF
+  const activePdfSrc = pdfUrl || "/sample-payslip.pdf";
+
+  // Load the PDF Document with pdfjs-dist dynamically in client
+  useEffect(() => {
+    let isCancelled = false;
+    setLoading(true);
+
+    const initPdf = async () => {
+      try {
+        const pdfjsLib = await import("pdfjs-dist");
+        if (pdfjsLib.GlobalWorkerOptions) {
+          pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+        }
+
+        const loadingTask = (pdfjsLib as any).getDocument({
+          url: activePdfSrc,
+        });
+        const doc = await loadingTask.promise;
+        if (!isCancelled) {
+          setPdfDoc(doc);
+          if (onPageCountChange) {
+            onPageCountChange(doc.numPages);
+          }
+          setLoading(false);
+        }
+      } catch (err) {
+        console.warn("pdfjs-dist canvas loading error, falling back to native PDF embed:", err);
+        if (!isCancelled) {
+          setUseNativeViewer(true);
+          setLoading(false);
+        }
+      }
+    };
+
+    initPdf();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [activePdfSrc, onPageCountChange]);
+
+  // Render current page onto canvas
+  useEffect(() => {
+    if (!pdfDoc || useNativeViewer) return;
+
+    let isCancelled = false;
+    let renderTask: any = null;
+
+    const renderCurrentPage = async () => {
+      try {
+        const pageNumber = Math.min(Math.max(1, docPage), pdfDoc.numPages);
+        const page = await pdfDoc.getPage(pageNumber);
+        if (isCancelled) return;
+
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const context = canvas.getContext("2d");
+        if (!context) return;
+
+        // Base resolution scaling + user zoom
+        const scale = (zoom / 100) * 1.35;
+        const viewport = page.getViewport({ scale });
+
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        const renderContext = {
+          canvasContext: context,
+          viewport: viewport,
+        };
+
+        renderTask = page.render(renderContext);
+        await renderTask.promise;
+      } catch (err: any) {
+        if (err?.name !== "RenderingCancelledException") {
+          console.error("Canvas render error:", err);
+        }
+      }
+    };
+
+    renderCurrentPage();
+
+    return () => {
+      isCancelled = true;
+      if (renderTask) {
+        renderTask.cancel();
+      }
+    };
+  }, [pdfDoc, docPage, zoom, useNativeViewer]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && onUploadNewPdf) {
+      onUploadNewPdf(file);
+    }
+  };
+
   return (
-    <div className="flex-1 overflow-y-auto p-6 flex justify-center items-start">
-      <div
-        className="bg-white rounded-2xl shadow-md border border-slate-200/65 p-8 flex flex-col justify-between text-left transition-all origin-top w-full animate-in fade-in zoom-in-95 duration-200"
-        style={{
-          transform: `scale(${zoom / 120})`,
-          maxWidth: "420px",
-          minHeight: "560px",
-        }}
-      >
-        <div>
-          {/* Doc Header */}
-          <div className="flex justify-between items-start border-b border-slate-100 pb-4 mb-4">
-            <div>
-              <h5 className="font-extrabold text-slate-800 text-sm tracking-tight">
-                Busta Paga / Pay Slip
-              </h5>
-              <span className="text-[9px] font-semibold text-slate-400">
-                Page {docPage} of 8
-              </span>
-            </div>
-            {/* Your logo */}
-            <Image
-              src="/assets/icons/logo.svg"
-              alt="Logo"
-              width={140}
-              height={40}
-              className="h-6 w-auto object-contain"
-            />
-          </div>
+    <div className="flex-1 overflow-auto p-4 md:p-6 flex flex-col items-center justify-start bg-slate-200/60 relative">
+      {/* Hidden file input for uploading an alternate or new PDF */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".pdf,application/pdf"
+        onChange={handleFileChange}
+        className="hidden"
+      />
 
-          {/* Doc Content */}
-          <div className="space-y-4.5 mt-2">
-            <div className="space-y-0.5 border-b border-slate-50 pb-2">
-              <h6 className="text-[10px] font-extrabold text-slate-700 uppercase tracking-tight">
-                Employee Details
-              </h6>
-              <div className="grid grid-cols-2 gap-2 mt-1">
-                <div>
-                  <p className="text-[8px] text-slate-400 uppercase tracking-wider font-semibold">Name</p>
-                  <p className="text-[9px] font-bold text-slate-700">{editingPacket.employeeName}</p>
-                </div>
-                <div>
-                  <p className="text-[8px] text-slate-400 uppercase tracking-wider font-semibold">Tax Code / CF</p>
-                  <p className="text-[9px] font-bold text-slate-700">{editingPacket.cf || "N/A"}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-0.5 border-b border-slate-50 pb-2">
-              <h6 className="text-[10px] font-extrabold text-slate-700 uppercase tracking-tight">
-                Period & Reason
-              </h6>
-              <div className="grid grid-cols-2 gap-2 mt-1">
-                <div>
-                  <p className="text-[8px] text-slate-400 uppercase tracking-wider font-semibold">Period</p>
-                  <p className="text-[9px] font-bold text-slate-700">{editingPacket.period}</p>
-                </div>
-                <div>
-                  <p className="text-[8px] text-slate-400 uppercase tracking-wider font-semibold">Reason</p>
-                  <p className="text-[9px] font-bold text-slate-700">{editingPacket.causale}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-0.5 border-b border-slate-50 pb-2">
-              <h6 className="text-[10px] font-extrabold text-slate-700 uppercase tracking-tight">
-                Financial Data
-              </h6>
-              <div className="space-y-2 mt-1">
-                <div className="flex justify-between items-center">
-                  <p className="text-[9px] font-semibold text-slate-500">Gross Salary</p>
-                  <p className="text-[9px] font-bold text-slate-700">€ {editingPacket.grossSalary.toFixed(2)}</p>
-                </div>
-                <div className="flex justify-between items-center">
-                  <p className="text-[9px] font-semibold text-slate-500">Deductions (Deemed)</p>
-                  <p className="text-[9px] font-bold text-rose-500">- € {editingPacket.deemed.toFixed(2)}</p>
-                </div>
-                <div className="flex justify-between items-center pt-1 border-t border-slate-50">
-                  <p className="text-[9px] font-bold text-slate-700">Net Salary</p>
-                  <p className="text-[10px] font-extrabold text-emerald-600">€ {editingPacket.netSalary.toFixed(2)}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-0.5">
-              <h6 className="text-[10px] font-extrabold text-slate-700 uppercase tracking-tight">
-                TFR (Trattamento di Fine Rapporto)
-              </h6>
-              <div className="space-y-1.5 mt-1">
-                <div className="flex justify-between items-center">
-                  <p className="text-[8px] font-semibold text-slate-500">TFR Monthly</p>
-                  <p className="text-[8px] font-bold text-slate-700">{editingPacket.tfrMonthly || "0.00"}</p>
-                </div>
-                <div className="flex justify-between items-center">
-                  <p className="text-[8px] font-semibold text-slate-500">TFR This Year</p>
-                  <p className="text-[8px] font-bold text-slate-700">€ {editingPacket.trfThisYear.toFixed(2)}</p>
-                </div>
-                <div className="flex justify-between items-center">
-                  <p className="text-[8px] font-semibold text-slate-500">TFR Previous Years</p>
-                  <p className="text-[8px] font-bold text-slate-700">€ {editingPacket.trfPrevYears.toFixed(2)}</p>
-                </div>
-                <div className="flex justify-between items-center pt-1 border-t border-slate-50">
-                  <p className="text-[9px] font-bold text-slate-700">Total TFR Amount ({editingPacket.totalTfrAmount || "Current"})</p>
-                  <p className="text-[9px] font-extrabold text-slate-800">€ {(editingPacket.trfThisYear + editingPacket.trfPrevYears).toFixed(2)}</p>
-                </div>
-              </div>
-            </div>
-          </div>
+      {/* Top Banner info & Upload Action */}
+      <div className="w-full max-w-[680px] flex items-center justify-between mb-3 px-1 text-xs">
+        <div className="flex items-center gap-1.5 text-slate-600 font-semibold truncate">
+          <FileText size={14} className="text-brand shrink-0" />
+          <span className="truncate">
+            {pdfUrl ? "Uploaded PDF Document" : "sample-payslip.pdf (Uploaded Cedolino)"}
+          </span>
         </div>
 
-        {/* Doc Footer */}
-        <div className="border-t border-slate-100 pt-3 flex justify-between items-center text-[9px] font-semibold text-slate-400 mt-6">
-          <span>Generated by Harem Accountant</span>
-          <span>CONFIDENTIAL</span>
-        </div>
+        {onUploadNewPdf && (
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="inline-flex items-center gap-1.5 px-3 py-1 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300/80 shadow-xs transition-all cursor-pointer shrink-0 ml-2"
+          >
+            <Upload size={12} className="text-slate-500" />
+            <span>Upload New PDF</span>
+          </button>
+        )}
       </div>
+
+      {/* Loading State */}
+      {loading && (
+        <div className="flex flex-col items-center justify-center min-h-[420px] text-slate-500 gap-3">
+          <Loader2 size={32} className="animate-spin text-brand" />
+          <p className="text-xs font-semibold">Loading uploaded PDF document...</p>
+        </div>
+      )}
+
+      {/* PDF.js Canvas Rendering of Real Uploaded PDF */}
+      {!loading && !useNativeViewer && (
+        <div className="bg-white rounded-lg shadow-xl border border-slate-300/80 overflow-hidden flex justify-center items-center transition-all">
+          <canvas ref={canvasRef} className="max-w-full h-auto block" />
+        </div>
+      )}
+
+      {/* Native Browser PDF Viewer Fallback */}
+      {!loading && useNativeViewer && (
+        <div className="w-full h-full min-h-[580px] bg-white rounded-xl shadow-xl border border-slate-300 overflow-hidden">
+          <iframe
+            src={`${activePdfSrc}#page=${docPage}&zoom=${zoom}&toolbar=0&navpanes=0`}
+            className="w-full h-full min-h-[580px] border-0"
+            title="Uploaded PDF Document"
+          />
+        </div>
+      )}
     </div>
   );
 }

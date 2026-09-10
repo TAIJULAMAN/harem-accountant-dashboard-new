@@ -19,6 +19,7 @@ export default function SalaryUploadFlow() {
   const [, setTermsAccepted] = useState(false);
   const [salaries, setSalaries] = useState<ExtractedSalary[]>([]);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [uploadedPdfUrl, setUploadedPdfUrl] = useState<string | null>(null);
 
   const handleExtractData = () => {
     setIsExtracting(true);
@@ -41,6 +42,7 @@ export default function SalaryUploadFlow() {
     setSalaries([]);
     setTermsAccepted(false);
     setShowSuccessModal(false);
+    setUploadedPdfUrl(null);
     setStep(1);
   };
 
@@ -63,6 +65,10 @@ export default function SalaryUploadFlow() {
           setSelectedSalon={setSelectedSalon}
           isExtracting={isExtracting}
           onExtract={handleExtractData}
+          onPdfUpload={(file) => {
+            const url = URL.createObjectURL(file);
+            setUploadedPdfUrl(url);
+          }}
         />
       )}
 
@@ -72,6 +78,8 @@ export default function SalaryUploadFlow() {
           salaries={salaries}
           setSalaries={setSalaries}
           setStep={setStep}
+          uploadedPdfUrl={uploadedPdfUrl}
+          setUploadedPdfUrl={setUploadedPdfUrl}
         />
       )}
 

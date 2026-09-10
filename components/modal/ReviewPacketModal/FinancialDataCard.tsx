@@ -1,5 +1,5 @@
 import React from "react";
-import CustomInput from "../../customComponent/CustomInput";
+import { DollarSign } from "lucide-react";
 import { ExtractedSalary } from "@/components/salaries/newUpload/data";
 
 interface FinancialDataCardProps {
@@ -12,152 +12,189 @@ export default function FinancialDataCard({
   setEditingPacket,
 }: FinancialDataCardProps) {
   return (
-    <div className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm space-y-4">
-      <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-50 pb-2">
-        Financial Data
-      </h4>
+    <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs space-y-4">
+      {/* Section Header with Icon */}
+      <div className="flex items-center gap-2 text-slate-800 font-bold text-sm border-b border-slate-100 pb-3">
+        <DollarSign size={16} className="text-slate-500 shrink-0" />
+        <span>Financial Data</span>
+      </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3.5">
         {/* Gross Amount */}
-        <div className="space-y-1">
-          <div className="flex justify-between items-center mb-1">
-            <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+        <div>
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="text-xs font-semibold text-slate-500">
               Gross Amount (€)
             </label>
-            <span className="text-[11px] font-bold text-[#f59e0b]">75%</span>
+            <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/60">
+              76%
+            </span>
           </div>
-          <CustomInput
+          <input
             type="number"
-            required
-            value={editingPacket.grossSalary.toString()}
-            onChange={(val) =>
+            step="0.01"
+            value={editingPacket.grossSalary ?? ""}
+            onChange={(e) => {
+              const gross = parseFloat(e.target.value) || 0;
               setEditingPacket({
                 ...editingPacket,
-                grossSalary: parseFloat(val) || 0,
-              })
-            }
+                grossSalary: gross,
+                netSalary: parseFloat(
+                  Math.max(0, gross - (editingPacket.deemed || 0)).toFixed(2),
+                ),
+              });
+            }}
+            placeholder="0.00"
+            className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand focus:bg-white transition-all"
           />
         </div>
 
-        {/* Deductions */}
-        <div className="space-y-1">
-          <div className="flex justify-between items-center mb-1">
-            <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              Deductions (€)
+        {/* Ritenute (€) */}
+        <div>
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="text-xs font-semibold text-slate-500">
+              Ritenute (€)
             </label>
-            <span className="text-[11px] font-bold text-[#10b981]">90%</span>
+            <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60">
+              83%
+            </span>
           </div>
-          <CustomInput
+          <input
             type="number"
-            required
-            value={editingPacket.deemed.toString()}
-            onChange={(val) =>
+            step="0.01"
+            value={editingPacket.deemed ?? ""}
+            onChange={(e) => {
+              const ritenute = parseFloat(e.target.value) || 0;
               setEditingPacket({
                 ...editingPacket,
-                deemed: parseFloat(val) || 0,
-              })
-            }
+                deemed: ritenute,
+                netSalary: parseFloat(
+                  Math.max(0, (editingPacket.grossSalary || 0) - ritenute).toFixed(
+                    2,
+                  ),
+                ),
+              });
+            }}
+            placeholder="0.00"
+            className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand focus:bg-white transition-all"
           />
         </div>
 
         {/* Net Amount */}
-        <div className="space-y-1">
-          <div className="flex justify-between items-center mb-1">
-            <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+        <div>
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="text-xs font-semibold text-slate-500">
               Net Amount (€)
             </label>
-            <span className="text-[11px] font-bold text-[#10b981]">99%</span>
+            <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60">
+              99%
+            </span>
           </div>
-          <CustomInput
+          <input
             type="number"
-            required
-            value={editingPacket.netSalary.toString()}
-            onChange={(val) =>
+            step="0.01"
+            value={editingPacket.netSalary ?? ""}
+            onChange={(e) =>
               setEditingPacket({
                 ...editingPacket,
-                netSalary: parseFloat(val) || 0,
+                netSalary: parseFloat(e.target.value) || 0,
               })
             }
+            placeholder="0.00"
+            className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand focus:bg-white transition-all"
           />
         </div>
 
         {/* TFR Monthly */}
-        <div className="space-y-1">
-          <div className="flex justify-between items-center mb-1">
-            <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+        <div>
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="text-xs font-semibold text-slate-500">
               TFR Monthly (€)
             </label>
-            <span className="text-[11px] font-bold text-[#ef4444]">10%</span>
+            <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/60">
+              71%
+            </span>
           </div>
-          <CustomInput
+          <input
+            type="text"
             value={editingPacket.tfrMonthly || ""}
-            onChange={(val) =>
+            onChange={(e) =>
               setEditingPacket({
                 ...editingPacket,
-                tfrMonthly: val,
+                tfrMonthly: e.target.value,
               })
             }
+            placeholder="0.00"
+            className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand focus:bg-white transition-all"
           />
         </div>
 
         {/* TFR This Year */}
-        <div className="space-y-1">
-          <div className="flex justify-between items-center mb-1">
-            <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+        <div>
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="text-xs font-semibold text-slate-500">
               TFR This Year (€)
             </label>
-            <span className="text-[11px] font-bold text-[#f59e0b]">71%</span>
+            <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/60">
+              71%
+            </span>
           </div>
-          <CustomInput
+          <input
             type="number"
-            required
-            value={editingPacket.trfThisYear.toString()}
-            onChange={(val) =>
+            step="0.01"
+            value={editingPacket.trfThisYear ?? ""}
+            onChange={(e) =>
               setEditingPacket({
                 ...editingPacket,
-                trfThisYear: parseFloat(val) || 0,
+                trfThisYear: parseFloat(e.target.value) || 0,
               })
             }
+            placeholder="0.00"
+            className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand focus:bg-white transition-all"
           />
         </div>
 
         {/* Bottom Split: TRF al 31/12/xx and Total TFR Amount */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1">
-            <div className="flex justify-between items-center mb-1">
-              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">
-                TRF al 31/12/xx (€)
+        <div className="grid grid-cols-2 gap-3 pt-1">
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-xs font-semibold text-slate-500 truncate">
+                TRF al 31/12 (€)
               </label>
-              <span className="text-[11px] font-bold text-[#f59e0b] shrink-0 ml-1">
+              <span className="text-xs font-bold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-md border border-amber-200/60 shrink-0 ml-1">
                 72%
               </span>
             </div>
-            <CustomInput
+            <input
               type="number"
-              required
-              value={editingPacket.trfPrevYears.toString()}
-              onChange={(val) =>
+              step="1"
+              value={editingPacket.trfPrevYears ?? ""}
+              onChange={(e) =>
                 setEditingPacket({
                   ...editingPacket,
-                  trfPrevYears: parseInt(val, 10) || 0,
+                  trfPrevYears: parseInt(e.target.value, 10) || 0,
                 })
               }
+              placeholder="0"
+              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand focus:bg-white transition-all"
             />
           </div>
 
-          <div className="space-y-1">
-            <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1 truncate">
-              Total TFR Amount
+          <div>
+            <label className="block text-xs font-semibold text-slate-500 mb-1.5 truncate">
+              Total TFR Date/Ref
             </label>
-            <CustomInput
-              required
+            <input
+              type="text"
               value={editingPacket.totalTfrAmount || "31/12/2024"}
-              onChange={(val) =>
+              onChange={(e) =>
                 setEditingPacket({
                   ...editingPacket,
-                  totalTfrAmount: val,
+                  totalTfrAmount: e.target.value,
                 })
               }
+              placeholder="31/12/2024"
+              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand focus:bg-white transition-all"
             />
           </div>
         </div>

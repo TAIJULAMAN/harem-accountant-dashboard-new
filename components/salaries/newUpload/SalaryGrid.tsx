@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { Check, Link as LinkIcon, AlertTriangle, Eye, CheckCircle2 } from "lucide-react";
+import { Check, Link as LinkIcon, AlertTriangle, Eye, CheckCircle2, Edit } from "lucide-react";
 import { ExtractedSalary } from "./data";
 
 interface SalaryGridProps {
@@ -9,6 +9,7 @@ interface SalaryGridProps {
   toggleSelect: (id: string) => void;
   setEditingPacket: (packet: ExtractedSalary | null) => void;
   approvePacket: (id: string) => void;
+  onEditCausale?: (packet: ExtractedSalary) => void;
 }
 
 export default function SalaryGrid({
@@ -17,6 +18,7 @@ export default function SalaryGrid({
   toggleSelect,
   setEditingPacket,
   approvePacket,
+  onEditCausale,
 }: SalaryGridProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -27,11 +29,10 @@ export default function SalaryGrid({
         return (
           <div
             key={packet.id}
-            className={`group rounded-xl border bg-white p-5 shadow-sm transition-all duration-200 text-left flex flex-col justify-between ${
-              isSelected
-                ? "border-brand ring-2 ring-brand/10 bg-brand/[0.005]"
-                : "border-slate-100 hover:border-slate-200 hover:shadow-md"
-            }`}
+            className={`group rounded-xl border bg-white p-5 shadow-sm transition-all duration-200 text-left flex flex-col justify-between ${isSelected
+              ? "border-brand ring-2 ring-brand/10 bg-brand/[0.005]"
+              : "border-slate-100 hover:border-slate-200 hover:shadow-md"
+              }`}
           >
             <div>
               {/* Card Top Row */}
@@ -45,11 +46,10 @@ export default function SalaryGrid({
                       className="sr-only"
                     />
                     <div
-                      className={`h-4.5 w-4.5 rounded-[5px] flex items-center justify-center transition-all ${
-                        isSelected
-                          ? "bg-brand text-white border-brand"
-                          : "border border-slate-300 bg-white hover:border-slate-400"
-                      }`}
+                      className={`h-4.5 w-4.5 rounded-[5px] flex items-center justify-center transition-all ${isSelected
+                        ? "bg-brand text-white border-brand"
+                        : "border border-slate-300 bg-white hover:border-slate-400"
+                        }`}
                     >
                       {isSelected && (
                         <Check size={10} strokeWidth={4} className="text-white" />
@@ -78,11 +78,10 @@ export default function SalaryGrid({
                 </div>
 
                 <span
-                  className={`inline-flex items-center shrink-0 rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
-                    isApproved
-                      ? "bg-emerald-50 text-emerald-600"
-                      : "bg-amber-50 text-amber-600"
-                  }`}
+                  className={`inline-flex items-center shrink-0 rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider ${isApproved
+                    ? "bg-emerald-50 text-emerald-600"
+                    : "bg-amber-50 text-amber-600"
+                    }`}
                 >
                   {packet.status}
                 </span>
@@ -101,12 +100,16 @@ export default function SalaryGrid({
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
-                      setEditingPacket(packet);
+                      if (onEditCausale) {
+                        onEditCausale(packet);
+                      } else {
+                        setEditingPacket(packet);
+                      }
                     }}
                     className="text-brand font-bold hover:underline flex items-center gap-1 min-w-0"
                   >
                     <span className="truncate max-w-[120px]">{packet.causale}</span>
-                    <LinkIcon size={10} className="shrink-0" />
+                    <Edit size={16} className="shrink-0" />
                   </a>
                 </div>
 
@@ -181,11 +184,10 @@ export default function SalaryGrid({
                 <button
                   onClick={() => approvePacket(packet.id)}
                   disabled={isApproved}
-                  className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl font-bold text-xs py-2.5 transition-colors cursor-pointer ${
-                    isApproved
-                      ? "bg-emerald-500/10 text-emerald-500 cursor-default"
-                      : "bg-emerald-50 text-emerald-600 hover:bg-emerald-100"
-                  }`}
+                  className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl font-bold text-xs py-2.5 transition-colors cursor-pointer ${isApproved
+                    ? "bg-emerald-500/10 text-emerald-500 cursor-default"
+                    : "bg-emerald-50 text-emerald-600 hover:bg-emerald-100"
+                    }`}
                 >
                   <CheckCircle2 size={13} />
                   <span>{isApproved ? "Approved" : "Approve"}</span>

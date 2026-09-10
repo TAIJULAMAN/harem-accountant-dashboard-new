@@ -6,6 +6,7 @@ import ViewModeToggle from "./ViewModeToggle";
 import SalaryGrid from "./SalaryGrid";
 import SalaryList from "./SalaryList";
 import ReviewPacketModal from "../../modal/ReviewPacketModal/ReviewPacketModal";
+import EditCausaleModal from "../../modal/EditCausaleModal";
 import { useReextract } from "./useReextract";
 
 interface SalaryUploadStep2Props {
@@ -13,18 +14,25 @@ interface SalaryUploadStep2Props {
   salaries: ExtractedSalary[];
   setSalaries: React.Dispatch<React.SetStateAction<ExtractedSalary[]>>;
   setStep: (step: 1 | 2 | 3 | 4) => void;
+  uploadedPdfUrl?: string | null;
+  setUploadedPdfUrl?: (url: string | null) => void;
 }
 
 export default function SalaryUploadStep2({
+  selectedSalon,
   salaries,
   setSalaries,
   setStep,
+  uploadedPdfUrl,
+  setUploadedPdfUrl,
 }: SalaryUploadStep2Props) {
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [editingPacket, setEditingPacket] = useState<ExtractedSalary | null>(
     null,
   );
+  const [editingCausalePacket, setEditingCausalePacket] =
+    useState<ExtractedSalary | null>(null);
   const [docPage, setDocPage] = useState(3);
   const [zoom, setZoom] = useState(120);
 
@@ -62,6 +70,15 @@ export default function SalaryUploadStep2({
     setSalaries((prev) =>
       prev.map((s) => (s.id === id ? { ...s, status: "Approved" } : s)),
     );
+  };
+
+  const handleSaveCausale = (id: string, newCausale: string) => {
+    setSalaries((prev) =>
+      prev.map((s) => (s.id === id ? { ...s, causale: newCausale } : s)),
+    );
+    if (editingPacket && editingPacket.id === id) {
+      setEditingPacket({ ...editingPacket, causale: newCausale });
+    }
   };
 
   return (
@@ -124,6 +141,7 @@ export default function SalaryUploadStep2({
           toggleSelect={toggleSelect}
           setEditingPacket={setEditingPacket}
           approvePacket={approvePacket}
+          onEditCausale={setEditingCausalePacket}
         />
       ) : (
         <SalaryList
@@ -132,6 +150,7 @@ export default function SalaryUploadStep2({
           toggleSelect={toggleSelect}
           setEditingPacket={setEditingPacket}
           approvePacket={approvePacket}
+          onEditCausale={setEditingCausalePacket}
         />
       )}
 
@@ -164,6 +183,25 @@ export default function SalaryUploadStep2({
           handleReextract={handleReextract}
           isReextracting={isReextracting}
           setSalaries={setSalaries}
+          pdfUrl={uploadedPdfUrl}
+          onUploadNewPdf={(file) => {
+            const url = URL.createObjectURL(file);
+            if (setUploadedPdfUrl) {
+              setUploadedPdfUrl(url);
+            }
+          }}
+        />
+      )}
+
+      {/* Edit Causale Modal */}
+      {editingCausalePacket && (
+        <EditCausaleModal
+          packet={editingCausalePacket}
+          onClose={() => setEditingCausalePacket(null)}
+          onSave={(newCausale) => {
+            handleSaveCausale(editingCausalePacket.id, newCausale);
+            setEditingCausalePacket(null);
+          }}
         />
       )}
     </div>

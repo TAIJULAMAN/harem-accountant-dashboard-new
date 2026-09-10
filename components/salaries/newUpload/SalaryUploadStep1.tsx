@@ -11,6 +11,7 @@ interface SalaryUploadStep1Props {
   setSelectedSalon: (salon: string) => void;
   isExtracting: boolean;
   onExtract: () => void;
+  onPdfUpload?: (file: File) => void;
 }
 
 export default function SalaryUploadStep1({
@@ -18,6 +19,7 @@ export default function SalaryUploadStep1({
   setSelectedSalon,
   isExtracting,
   onExtract,
+  onPdfUpload,
 }: SalaryUploadStep1Props) {
   const { files, startMockUpload, removeFile, formatFileSize } =
     useMockUpload(onExtract);
@@ -45,7 +47,8 @@ export default function SalaryUploadStep1({
                 label=""
                 accept=".pdf"
                 onFileSelect={(file) => {
-                  if (file.type === "application/pdf") {
+                  if (file.type === "application/pdf" || file.name.endsWith(".pdf")) {
+                    if (onPdfUpload) onPdfUpload(file);
                     startMockUpload(file.name, file.size);
                   }
                 }}

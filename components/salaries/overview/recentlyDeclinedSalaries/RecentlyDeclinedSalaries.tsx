@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { AlertTriangle } from "lucide-react";
 import { declinedSalariesData } from "./data";
 
@@ -13,9 +14,12 @@ export default function RecentlyDeclinedSalaries() {
         <h3 className="text-base sm:text-lg font-bold text-slate-800 tracking-tight">
           Recently Declined Salaries
         </h3>
-        <button className="border border-brand text-brand rounded-lg px-4 py-1.5 text-xs font-bold transition-all cursor-pointer">
+        <Link
+          href="/salaries/pending"
+          className="border border-brand text-brand hover:bg-brand hover:text-white rounded-lg px-4 py-1.5 text-xs font-bold transition-all cursor-pointer inline-flex items-center justify-center"
+        >
           View All
-        </button>
+        </Link>
       </div>
 
       {/* List */}
