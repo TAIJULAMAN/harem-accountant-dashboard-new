@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import { useSalon } from "@/context/SalonContext";
@@ -10,8 +11,15 @@ export default function DashboardLayoutContent({
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { selectedSalon, setSelectedSalon } = useSalon();
+
+  const isAuthRoute = pathname === "/login" || pathname?.startsWith("/login");
+
+  if (isAuthRoute) {
+    return <>{children}</>;
+  }
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-white">

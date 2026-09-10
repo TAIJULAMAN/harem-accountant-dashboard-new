@@ -2,11 +2,19 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 
 export default function UserProfile() {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const profileDropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  const handleSignOut = () => {
+    setProfileDropdownOpen(false);
+    router.push("/login");
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -48,14 +56,25 @@ export default function UserProfile() {
 
       {profileDropdownOpen && (
         <div className="absolute right-0 mt-2 w-48 origin-top-right rounded-xl border border-slate-100 bg-white p-1.5 shadow-lg ring-1 ring-black/5 z-30">
-          <button className="block w-full rounded-xl px-4 py-2 text-left text-sm text-slate-600 hover:bg-slate-50 cursor-pointer">
+          <Link
+            href="/settings?tab=Profile"
+            onClick={() => setProfileDropdownOpen(false)}
+            className="block w-full rounded-xl px-4 py-2 text-left text-sm text-slate-600 hover:bg-slate-50 cursor-pointer"
+          >
             Your Profile
-          </button>
-          <button className="block w-full rounded-xl px-4 py-2 text-left text-sm text-slate-600 hover:bg-slate-50 cursor-pointer">
+          </Link>
+          <Link
+            href="/settings?tab=Security"
+            onClick={() => setProfileDropdownOpen(false)}
+            className="block w-full rounded-xl px-4 py-2 text-left text-sm text-slate-600 hover:bg-slate-50 cursor-pointer"
+          >
             Account Settings
-          </button>
+          </Link>
           <div className="my-1 border-t border-slate-100" />
-          <button className="block w-full rounded-xl px-4 py-2 text-left text-sm text-rose-600 hover:bg-rose-50 cursor-pointer">
+          <button
+            onClick={handleSignOut}
+            className="block w-full rounded-xl px-4 py-2 text-left text-sm text-rose-600 hover:bg-rose-50 cursor-pointer"
+          >
             Sign Out
           </button>
         </div>

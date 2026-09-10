@@ -20,6 +20,7 @@ import {
   DollarSign,
   CreditCard,
   Receipt,
+  Settings,
 } from "lucide-react";
 import Image from "next/image";
 import CustomCloseButton from "../customComponent/CustomCloseButton";
@@ -229,6 +230,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         },
       ],
     },
+    {
+      name: "Settings",
+      icon: Settings,
+      hasDropdown: false,
+    },
   ];
 
   return (
@@ -276,7 +282,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 ? item.subItems.some((subItem) => pathname === subItem.path)
                 : item.name === "Dashboard"
                   ? pathname === "/"
-                  : pathname === `/${item.name.toLowerCase()}`;
+                  : pathname === `/${item.name.toLowerCase()}` ||
+                    pathname.startsWith(`/${item.name.toLowerCase()}/`);
               const isExpanded = expandedItem === item.name;
               const Icon = item.icon;
 
