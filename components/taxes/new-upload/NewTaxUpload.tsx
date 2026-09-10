@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Trash2, File as FileIcon } from "lucide-react";
 import CustomSelect from "@/components/customComponent/CustomSelect";
 import CustomFileUpload from "@/components/customComponent/CustomFileUpload";
@@ -20,6 +21,7 @@ const TAX_TYPES = [
 const SALONS = ["Select Salon", "Salon 1", "Salon 2"];
 
 export default function NewTaxUpload() {
+  const router = useRouter();
   const [salon, setSalon] = useState("Select Salon");
   const [taxType, setTaxType] = useState("Select Tax Type");
 
@@ -129,8 +131,10 @@ export default function NewTaxUpload() {
 
       {/* Action Buttons Bottom Row */}
       <div className="flex items-center justify-between pt-2">
-        <CancelButton>Cancel</CancelButton>
-        <SubmitButton>Send for Approval</SubmitButton>
+        <CancelButton onClick={() => router.back()}>Cancel</CancelButton>
+        <SubmitButton onClick={() => router.push("/taxes/pending")}>
+          Send for Approval
+        </SubmitButton>
       </div>
     </div>
   );
